@@ -141,10 +141,21 @@
       width: 100%;
     }
     
+    
+    .footer{
+      position: fixed;
+      z-index: 9999;
+      bottom: 0;
+      text-align: center;
+      width: 100%;
+      padding: 10px;
+      background-color: #000000;
+    }
+
     a {
-      color: #FFFFFF;
+      color: #5A65D9;
     }
     
     a:hover {
-      color: #ccc;
+      color: #3e44b8;
     }
