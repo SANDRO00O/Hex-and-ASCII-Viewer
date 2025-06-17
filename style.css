@@ -20,15 +20,13 @@
       margin-top: 1rem;
     }
     
-    .container {
+    main {
       padding: 1.3rem;
-      display: flex ;
     }
     
-    @media (max-width: 768px) {
-      .container {
-        display: block !important;
-        gap: 0;
+    @media (min-width: 768px) {
+      main {
+        display: flex;
       }
     }
     
