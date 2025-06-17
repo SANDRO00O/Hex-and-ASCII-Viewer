@@ -110,6 +110,12 @@
       border-radius: 6px;
       border: none;
       font-size: 14px;
+      background-color: #fff;
+      transition: .2s ease-in-out;
+    }
+    
+    button:hover{
+      background-color: #ccc;
     }
     
     .text {

@@ -175,7 +175,6 @@ async function downloadHex() {
   } catch (err) {
     console.error('Error:', err);
     lineLoader.style.display = 'none';
-    alert('An error occurred while generating the hex file.');
   }
 }
 
