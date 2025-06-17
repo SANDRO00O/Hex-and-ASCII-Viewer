@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Hex and ASCII Viewer</title>
+  <link rel="stylesheet" href="style.css" type="text/css" media="all" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+  <header>
+    <h1>Hex + ASCII Viewer</h1>
+  </header>
+  <main>
+    <aside id="controls">
+      <div class="drobfile" id="dropfile">
+        <i class="fas fa-cloud-upload-alt"></i>
+        Drag file here
+        <button class="filebtn" id="btnSelectFile"><i class="fas fa-folder-open ml-2"></i> Select File</button>
+        <input type="file" id="fileInput" />
+        <div id="fileName"></div>
+      </div>
+      <button onclick="downloadRawTxt()">Convert file to raw text (TXT)</button>
+      <button onclick="downloadHex()">Download Result</button>
+      
+    </aside>
+    <section id="viewer">
+      <div id="content"></div>
+    </section>
+    
+  </main>
+  <footer class="footer">
+    <p>Developed By <strong><a href="https://karrarnazim.netlify.app">Karrar</a></strong></p>
+  </footer>
+  <script src="script.js" type="text/javascript" charset="utf-8"></script>
+  
+</body>
+
+</html>
