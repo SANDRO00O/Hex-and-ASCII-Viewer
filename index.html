@@ -1,104 +1,173 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Enhanced Hex + ASCII Viewer</title>
+  <title>Enhanced Hex and ASCII Viewer</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/streamsaver@2.0.6/StreamSaver.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <link rel="stylesheet" href="style.css" type="text/css" media="all" />
 </head>
 
 <body>
-  <header>
-    <h1>Enhanced Hex + ASCII Viewer</h1>
-  </header>
+  
+  
   <main>
-    <aside id="controls">
+    <header>
+      <h1>Hex and ASCII Viewer with Search</h1>
+      <p>An advanced tool for viewing binary file content with BMH search algorithm for large files (up to 1GB+)</p>
+    </header>
+    <section id="controls">
       <div class="drobfile" id="dropfile">
         <i class="fas fa-cloud-upload-alt"></i>
-        Drag file here
-        <button class="filebtn" id="btnSelectFile"><i class="fas fa-folder-open ml-2"></i> or Select File</button>
+        <p>Drag and drop your file here</p>
+        <button class="filebtn" id="btnSelectFile"><i class="fas fa-folder-open"></i> Select File</button>
         <input type="file" id="fileInput" />
         <div id="fileName"></div>
-      </div>
-      
-      <div class="config-group">
-        <h3>Display Configuration</h3>
-        <div class="config-item">
-          <label for="bytesPerRow">Bytes per row:</label>
-          <input type="number" id="bytesPerRow" min="8" max="32" value="16" />
-        </div>
-        <div class="config-item">
-          <label for="rowHeight">Row height (px):</label>
-          <input type="number" id="rowHeight" min="15" max="40" value="20" />
+        <div id="file-size-warning">
+          <i class="fas fa-exclamation-triangle"></i> Max file size: 1GB
         </div>
       </div>
       
-      <div class="config-group">
-        <h3>Search</h3>
-        <div class="search-container">
-          <input type="text" id="searchInput" placeholder="Enter search text..." />
-          <button id="searchButton"><i class="fas fa-search"></i></button>
-        </div>
-        <div class="search-nav" id="searchNav">
-          <button id="prevResult"><i class="fas fa-arrow-up"></i> Prev</button>
-          <button id="nextResult">Next <i class="fas fa-arrow-down"></i></button>
+      <div class="panel-file-info">
+        <h3><i class="fas fa-sliders-h"></i> File Info</h3>
+        
+        <div class="file-info">
+          <div class="file-info-item">
+            <div>File Size</div>
+            <div class="file-info-value" id="fileSize">0 bytes</div>
+          </div>
+          <div class="file-info-item">
+            <div>Number of Rows</div>
+            <div class="file-info-value" id="fileRows">0</div>
+          </div>
+          <div class="file-info-item">
+            <div>Cached Data</div>
+            <div class="file-info-value" id="cachedRows">0 rows</div>
+          </div>
         </div>
       </div>
       
-      <div class="action-buttons">
-        <button class="action-btn export" onclick="downloadRawTxt()">
-          <i class="fas fa-file-download"></i> Download Raw Text
-        </button>
-        <button class="action-btn export" onclick="downloadHex()">
-          <i class="fas fa-file-code"></i> Download Hex Result
-        </button>
-        <button class="action-btn" onclick="clearCache()">
-          <i class="fas fa-trash-alt"></i> Clear Cache
-        </button>
+      <div class="panels-container">
+        <div class="panel">
+          <h3><i class="fas fa-sliders-h"></i> Settings</h3>
+          <div class="config-item">
+            <label for="bytesPerRow">Bytes per Row:</label>
+            <input type="number" id="bytesPerRow" min="8" max="32" value="16" />
+          </div>
+          <div class="config-item">
+            <label for="rowHeight">Row Height (px):</label>
+            <input type="number" id="rowHeight" min="15" max="40" value="20" />
+          </div>
+          
+          <div class="action-buttons">
+
+            <button class="action-btn" onclick="clearCache()">
+              <i class="fas fa-trash-alt"></i> Clear Cache
+            </button>
+          </div>
+        </div>
+        
+        <div class="panel">
+          <h3><i class="fas fa-search"></i> Search</h3>
+          <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Enter search text..." />
+            <div class="search-options">
+              <div class="search-option">
+                <input type="checkbox" id="caseSensitive" />
+                <label for="caseSensitive">Case Sensitive</label>
+              </div>
+              <div class="search-option">
+                <input type="checkbox" id="hexSearch" />
+                <label for="hexSearch">Hex Search</label>
+              </div>
+            </div>
+            <button id="searchButton"><i class="fas fa-search"></i> Search</button>
+          </div>
+          <div class="search-results-info" id="searchResultsInfo">
+            <span id="currentMatch">0</span> of <span id="totalMatches">0</span> results
+          </div>
+          <div class="search-nav" id="searchNav">
+            <button id="prevResult"><i class="fas fa-arrow-up"></i> Previous</button>
+            <button id="nextResult">Next <i class="fas fa-arrow-down"></i></button>
+            <button id="clearSearch"><i class="fas fa-times"></i> Clear Search</button>
+          </div>
+          
+          <button id="cancelSearch" class="action-btn cancel-btn" style="display:none; margin-top:15px;">
+            <i class="fas fa-times-circle"></i> Cancel Search
+          </button>
+        </div>
+      </div>
+      
+      <div class="panels-container">
+        <div class="panel">
+          <h3><i class="fas fa-download"></i> Download Options</h3>
+          <div class="download-options">
+            <div class="download-option">
+              <input type="checkbox" id="hexOption" checked>
+              <label for="hexOption">Hex</label>
+            </div>
+            <div class="download-option">
+              <input type="checkbox" id="asciiOption" checked>
+              <label for="asciiOption">ASCII</label>
+            </div>
+          </div>
+          
+          <div class="action-buttons">
+            <button class="action-btn export" onclick="downloadRawTxt()">
+              <i class="fas fa-file-download"></i> Download as Raw Text
+            </button>
+            <button class="action-btn export" onclick="downloadHex()">
+              <i class="fas fa-file-archive"></i> Download Compressed
+            </button>
+          </div>
+        </div>
       </div>
       
       <div id="progress-container">
         <div class="progress-header">
-          <span>Processing Progress</span>
+          <span>Processing Progress<span style="opacity: 0;" id="dots">...</span></span>
           <span id="progressText">0%</span>
         </div>
         <div id="progress-bar">
           <div id="progress-fill"></div>
         </div>
-      </div>
-      
-      <div class="stats">
-        <div id="fileStats">
-          <div class="statsstyle"><i class="fas fa-file"></i> Size: 0 bytes</div>
-          <div class="statsstyle"><i class="fas fa-list-ol"></i> Rows: 0</div>
+        <div class="done" id="done">
+          <p><i class="fas fa-check-circle"></i>done!
+          </p>
         </div>
-        <div class="statsstyle" id="cacheStats">
-          <div><i class="fas fa-memory"></i> Cached: 0 rows</div>
+        <div id="download-warning">
+          <i class="fas fa-exclamation-triangle"></i> Please do not close the browser during download
         </div>
       </div>
-    </aside>
+    </section>
     
     <section id="viewer">
-      <h1>Result:</h1>
+      <h2><i class="fas fa-file-alt"></i> Display Result:</h2>
       <div id="viewer-content">
         <div id="hex-content"></div>
         <div id="line-loader">
-          <i class="fas fa-spinner fa-spin"></i> Loading...
+          <div class="spinner"><i class="fas fa-spinner"></i></div>
+          <div>Loading file content...</div>
         </div>
       </div>
     </section>
   </main>
   
   <footer class="footer">
-    <p>Developed By <strong><a href="https://karrarnazim.netlify.app">Karrar</a></strong></p>
+    <p class="onep">Developed by <strong><a href="https://karrarnazim.netlify.app">Karrar Nazim</a></strong> </p>
+    <div class="contact">
+      <a href="">Github</a> <span> | </span>
+      <a href="https://karrarnazim.netlify.app">Contact</a>
+    </div>
+    <p> Advanced Hex Viewer with BMH Search for Large Files <span class="version">v3.0</span></p>
   </footer>
+  
   
   <div class="notification" id="notification"></div>
   
-<script src="script.js" type="text/javascript" charset="utf-8"></script>
+  <script src="script.js" type="text/javascript" charset="utf-8"></script>
 </body>
 
 </html>
