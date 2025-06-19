@@ -6,7 +6,7 @@
     const CHUNK_ROWS = 5000;
     const MAX_FILE_SIZE = 1024 * 1024 * 1024; // 1GB
     
-    //....
+    //.....
     
     // App state
     let activeOperations = 0;
