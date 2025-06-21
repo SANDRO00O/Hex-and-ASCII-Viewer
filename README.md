@@ -1,5 +1,9 @@
 # Hex + ASCII Viewer
 
+[![Open Source](https://img.shields.io/badge/Open%20Source-Yes-brightgreen?style=for-the-badge)](https://github.com/SANDRO00O/Hex-and-ASCII-Viewer)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![Stars](https://img.shields.io/github/stars/SANDRO00O/workflow-run-deleter?style=for-the-badge&logo=github)](https://github.com/SANDRO00O/Hex-and-ASCII-Viewer/stargazers)
+
 A simple and lightweight web-based tool to view the hexadecimal and ASCII representation of any file.  
 You can drag and drop a file or select it manually, then see its hex dump with ASCII side-by-side.  
 Additionally, you can download the raw text or the hex output as `.txt` files.
