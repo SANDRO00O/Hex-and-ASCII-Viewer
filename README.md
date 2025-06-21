@@ -6,8 +6,6 @@ Additionally, you can download the raw text or the hex output as `.txt` files.
 
 ---
 
-# Try it
-
 ### [**Live Demo**]([https://sandro00o.github.io/Hex-and-ASCII-Viewer/]) 
 
 ---
